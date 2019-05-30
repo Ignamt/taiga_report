@@ -1,12 +1,26 @@
 """Tests for classes.py."""
 from unittest import TestCase
-import classes
+from taiga_report import classes
 
 
 class TestUserStoryClass(TestCase):
     def test_class_creation(self):
-        us = classes.UserStory()
+        us = {"subject": "Prueba de Clase",
+              "epics": [{"subject": "Test Case"}],
+              "tags": ["expedientes"],
+              "tasks": [],
+              "due_date": None}
 
-    def test_creation_without_input(self):
-        with self.assertRaises(AttributeError):
-            us = classes.UserStory()
+        userstory = classes.UserStory(us)
+
+
+class TestEpicClass(TestCase):
+    pass
+
+
+class TestSectionClass(TestCase):
+    pass
+
+
+class TestReportClass(TestCase):
+    pass

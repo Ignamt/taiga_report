@@ -16,4 +16,16 @@ class UserStory:
             self.due_date = None
 
 
+class Epic(list, subject):
+    """Gathers the US and task subjects related to a certain epic."""
+    def __init__(self):
+        super().__init__()
+        self.subject()
 
+
+class Section:
+    """Houses epics and US depending on predefined tags."""
+
+
+class Report:
+    """Gathers all sections and prints itself in various formats"""
