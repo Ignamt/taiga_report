@@ -2,7 +2,9 @@ import datetime as dt
 
 
 class UserStory:
+    """Contains all the US info needed for the report."""
     def __init__(self, us):
+        """Sets up attributes for the instance"""
         self.subject = us["subject"]
         self.epic = us["epics"][0]["subject"]
         self.tags = us["tags"]
@@ -12,3 +14,6 @@ class UserStory:
                                                  "%Y-%m-%dT%H:%M:%S.%fZ")
         else:
             self.due_date = None
+
+
+
