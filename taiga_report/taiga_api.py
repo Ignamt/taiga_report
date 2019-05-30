@@ -23,6 +23,12 @@ headers.update({"Authorization": "Bearer "+auth_token,
 userstories = requests.get(api_url+"userstories?project=6",
                            headers=headers)
 
+#TODO: Create
+
 for us in userstories.json():
+    #TODO: Check for section tag
+        #TODO: 
+    
+    
     pprint.pprint(us)
     break
