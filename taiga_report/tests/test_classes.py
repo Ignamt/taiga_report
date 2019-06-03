@@ -36,5 +36,5 @@ class TestReportClass(TestCase):
     """Report class related tests"""
     def test_class_creation(self):
         """Tests creation of a Report instance with attribute"""
-        report = classes.Report()
+        report = classes.Report("SIEEL")
         self.assertTrue(hasattr(report, "sections"))

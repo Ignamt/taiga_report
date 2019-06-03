@@ -1,3 +1,4 @@
+"""Classes for the different sections of the report"""
 import datetime as dt
 
 
@@ -21,17 +22,20 @@ class Epic(list):
     def __init__(self, subject):
         super().__init__()
         self.subject = subject
+        self.user_stories = list()
 
 
 class Section:
     """Houses epics and US depending on predefined tags."""
     def __init__(self, name):
-        self.name = name
+        self.name = name.capitalize()
         self.epics = list()
         self.user_stories = list()
 
+
 class Report:
     """Gathers all sections and prints itself in various formats"""
-    def __init__(self):
+    def __init__(self, project):
         self.sections = list()
+        self.project = project
 
