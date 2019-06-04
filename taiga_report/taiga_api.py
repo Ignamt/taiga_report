@@ -1,15 +1,14 @@
 """Handles all API requests and response processing."""
 import requests
-import pprint
+import json 
 
-api_url = "https://taiga.leafnoise.io/api/v1/"
-auth_url = api_url + "auth"
-headers = {"content-type": "application/json"}
-data = {"type": "normal", "username": "ignamt", "password": "tanoira1"}
+import taiga_report.config as cfg
+
+
 sieel_slug = "ignamt-sieel"
 sieel_id = 6
 
-# login = requests.post(auth_url,
+# login = requests.post(AUTH_URL,
 #                       headers=headers,
 #                       data=json.dumps(data))
 
@@ -17,18 +16,38 @@ sieel_id = 6
 auth_token = "eyJ1c2VyX2F1dGhlbnRpY2F0aW9uX2lkIjo1MH0:1hW9TL:"\
              "2gZEaaGultNC0S8n-RCmFs6VUHc"
 
-headers.update({"Authorization": "Bearer "+auth_token,
-                "x-disable-pagination": "True"})
+# headers.update({"Authorization": "Bearer "+auth_token})
 
-userstories = requests.get(api_url+"userstories?project=6",
-                           headers=headers)
+# userstories = requests.get(API_URL+"userstories?project={}".format(sieel_id),
+                        #    headers=headers)
 
-#TODO: Create
 
-for us in userstories.json():
-    #TODO: Check for section tag
-        #TODO: 
-    
-    
-    pprint.pprint(us)
-    break
+class TaigaAPI:
+    """API class to connect to and interact with the Taiga API."""
+    host = "https://taiga.leafnoise.io/api/v1/"
+    auth_url = host + "auth"
+    headers = {"content-type": "application/json",
+                    "x-disable-pagination": "True"}
+
+    def __init__(self, project_slug):
+        """Init TaigaAPI with default attr to specific project."""
+         
+        self.login_data = {"type": "normal",
+                           "username": "ignamt",
+                           "password": "tanoira1"}
+        self.slug = project_slug
+
+        # self._auth()
+
+    def _login(self):
+        login_data = requests.post(self.auth_url,
+                                   headers=self.headers,
+                                   data=json.dumps(self.login_data))
+        return login_data.json()
+
+
+    def _save_auth(self, auth_token):
+        pass
+
+    def _auth(self):
+        pass

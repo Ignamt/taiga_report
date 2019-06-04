@@ -4,7 +4,7 @@ from taiga_report import classes
 
 
 class TestUserStoryClass(TestCase):
-    """UserStory class related tests"""
+    """UserStory class related tests."""
 
     def test_class_creation(self):
         """Tests creation of a UserStory instance."""
@@ -19,22 +19,24 @@ class TestUserStoryClass(TestCase):
 
 class TestEpicClass(TestCase):
     """Epic class related tests."""
-    
+
     def test_class_creation(self):
-        """Tests creation of an Epic instance"""
+        """Tests creation of an Epic instance."""
         epic = classes.Epic("expedientes")
 
 
 class TestSectionClass(TestCase):
     """Section class related tests."""
+
     def test_class_creation(self):
-        """Tests creation of a Section instance"""
-        section = classes.Section()
+        """Tests creation of a Section instance."""
+        section = classes.Section(name="expedientes")
 
 
 class TestReportClass(TestCase):
-    """Report class related tests"""
+    """Report class related tests."""
+
     def test_class_creation(self):
-        """Tests creation of a Report instance with attribute"""
-        report = classes.Report()
+        """Tests creation of a Report instance with attribute."""
+        report = classes.Report("SIEEL")
         self.assertTrue(hasattr(report, "sections"))
