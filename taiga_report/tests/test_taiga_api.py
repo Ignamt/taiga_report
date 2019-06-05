@@ -26,7 +26,11 @@ class TestAPI(TestCase):
         self.assertEqual(login_data["username"], "ignamt")
 
     def test_save_auth(self):
-        pass
+        auth_token = "testauthtoken"
+        self.api._save_auth(auth_token, os.sep.join(["taiga_report", "tests", "test_config.py"]))
+
+        import taiga_report.tests.test_config as config
+        self.assertEqual(config.TEST_AUTH_TOKEN, "testauthtoken")
 
     
     def test_auth(self):

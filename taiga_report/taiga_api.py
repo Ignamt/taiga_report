@@ -1,6 +1,7 @@
 """Handles all API requests and response processing."""
 import requests
-import json 
+import json
+import os
 
 import taiga_report.config as cfg
 
@@ -28,6 +29,7 @@ class TaigaAPI:
     auth_url = host + "auth"
     headers = {"content-type": "application/json",
                     "x-disable-pagination": "True"}
+    config_file = os.sep.join(["taiga_report", "config.py"])
 
     def __init__(self, project_slug):
         """Init TaigaAPI with default attr to specific project."""
@@ -46,7 +48,7 @@ class TaigaAPI:
         return login_data.json()
 
 
-    def _save_auth(self, auth_token):
+    def _save_auth(self, auth_token, cfg_file):
         pass
 
     def _auth(self):
