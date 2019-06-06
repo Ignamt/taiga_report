@@ -1,11 +1,32 @@
 # Generador de reportes de Taiga
 
-Este repo es para guardar toda la info del generador de reportes de taiga.
+Este programa tiene como finalidad generar reportes de manera automática en base
+a las UserStories cargadas en Taiga siguiendo unos lineamientos generales que se
+incluyen con el proyecto.
 
-Acá tengo código pegandole directo a la API de Taiga con diversas cosas, usando un auth_token generado con mi usuario (Iñaki)
+El proyecto está armado con `Python 3.6+`. NO JODAN, ACTUALICENSE.
 
-También está el código de la clase de UserStory con la cual voy a manipular toda la info.
+El proyecto en su estado actual no se puede ejecutar todavía. 
 
-Como primera idea voy a hacer que genere un archivo de Markdown con todo formateado para verlo lindo. Después voy a ver de hacerlo para que lo haga como Word.
+Para poder probar y desarrollarlo, hay que armar un entorno virtual (Venv, que 
+viene incluido con Python 3) con el cual se corre. [Tutorial para entornos 
+virtuales](www.tutorialentornosvirtuales.com)
 
-Una última fase sería pegarle directo a la API de Google Drive para poder ejecutarlo de cualquier lado y que genere el reporte y esté disponible en un Drive. Esto es una cagada desde ANSES, pero podría ir como parámetro del CLI o algo por el estilo como opción.
+Una vez instalado el entorno virtual y activado, instalar las dependencias que 
+vienen en el archivo `requirements.txt`. El comando para hacer esto automáticamente
+es (en la consola con el venv activado) es:
+
+    cd path\a\donde\clonaste\el\repo
+    pip install -r requirements.txt
+    
+Una vez acá, la mejor forma de ir probando es pararte sobre la carpeta superior
+del repo y ejecutar un intérprete de python (o ipython si tenés la posta). Ahí 
+podés ir importando los módulos y objetos para explorarlos e interactuar con 
+ellos.
+
+También desde este nivel (sin el intérprete de Python) podés correr el siguiente
+comando para ejecutar todos los tests automáticamente:
+
+    python -m pytest
+    
+Enjoy!
