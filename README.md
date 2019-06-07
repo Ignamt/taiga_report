@@ -10,7 +10,7 @@ El proyecto en su estado actual no se puede ejecutar todavía.
 
 Para poder probar y desarrollarlo, hay que armar un entorno virtual (Venv, que 
 viene incluido con Python 3) con el cual se corre. [Tutorial para entornos 
-virtuales](www.tutorialentornosvirtuales.com)
+virtuales](https://docs.python-guide.org/dev/virtualenvs/)
 
 Una vez instalado el entorno virtual y activado, instalar las dependencias que 
 vienen en el archivo `requirements.txt`. El comando para hacer esto automáticamente
