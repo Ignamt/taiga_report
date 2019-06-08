@@ -3,6 +3,7 @@ attrs==19.1.0
 certifi==2019.3.9
 chardet==3.0.4
 colorama==0.4.1
+coverage==4.5.3
 future==0.17.1
 idna==2.8
 importlib-metadata==0.17
@@ -16,6 +17,7 @@ pycryptodomex==3.8.1
 pyjwkest==1.4.0
 pyparsing==2.4.0
 pytest==4.6.2
+pytest-cov==2.7.1
 python-dateutil==2.8.0
 python-taiga==0.9.0
 pytz==2019.1
