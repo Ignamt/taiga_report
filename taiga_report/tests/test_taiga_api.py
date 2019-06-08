@@ -1,37 +1,44 @@
-"""Tests for the TaigaAPI"""
-from unittest import TestCase
+"""Tests for the TaigaAPI."""
+import pytest
+import io
+import json
+
 from taiga_report import taiga_api
 
 
-class TestAPI(TestCase):
-    """Contains tests for the API class and methods"""
+@pytest.fixture
+def api():
+    """Instance an API to use in tests."""
+    return taiga_api.TaigaAPI("ignamt-sieel")
 
 
-    def setUp(self):
-        self.api = taiga_api.TaigaAPI("ignamt-sieel")
+def test_api_creation(api):
+    assert api.slug == "ignamt-sieel"
+    assert api.auth_url =="https://taiga.leafnoise.io/api/v1/auth"
+    assert api.host == "https://taiga.leafnoise.io/api/v1/"
+    assert api.headers == {"content-type": "application/json",
+                           "x-disable-pagination": "True"}
 
 
-    def test_api_creation(self):
-        self.assertEqual(self.api.slug, "ignamt-sieel")
-        self.assertEqual(self.api.host,
-                         "https://taiga.leafnoise.io/api/v1/")
-        self.assertEqual(self.api.auth_url,
-                         "https://taiga.leafnoise.io/api/v1/auth")
-        self.assertEqual(self.api.headers,
-                         {"content-type": "application/json",
-                          "x-disable-pagination": "True"})
+def test_api_login(api):
+    login_data = api._login()
+    assert login_data["username"] == "ignamt"
 
-    def test_login(self):
-        login_data = self.api._login()
-        self.assertEqual(login_data["username"], "ignamt")
 
-    def test_save_auth(self):
-        auth_token = "testauthtoken"
-        self.api._save_auth(auth_token, os.sep.join(["taiga_report", "tests", "test_config.py"]))
+def test_api_save_auth(api):
+    auth_token = "testauthtoken"
+    cfg_file = MockFile('{"auth_token": ""}')
+    cfg_json = json.load(cfg_file)
+    api._save_auth(auth_token, cfg_json, cfg_file)
 
-        import taiga_report.tests.test_config as config
-        self.assertEqual(config.TEST_AUTH_TOKEN, "testauthtoken")
+    assert cfg_json["auth_token"] == "testauthtoken"
 
+
+def test_api_auth(api):
+    pass
+
+
+class MockFile(io.StringIO):
     
-    def test_auth(self):
+    def save(self):
         pass

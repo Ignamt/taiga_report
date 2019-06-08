@@ -3,8 +3,6 @@ import requests
 import json
 import os
 
-import taiga_report.config as cfg
-
 
 sieel_slug = "ignamt-sieel"
 sieel_id = 6
@@ -28,8 +26,8 @@ class TaigaAPI:
     host = "https://taiga.leafnoise.io/api/v1/"
     auth_url = host + "auth"
     headers = {"content-type": "application/json",
-                    "x-disable-pagination": "True"}
-    config_file = os.sep.join(["taiga_report", "config.py"])
+               "x-disable-pagination": "True"}
+    config_file = os.sep.join(["taiga_report", "api.cfg"])
 
     def __init__(self, project_slug):
         """Init TaigaAPI with default attr to specific project."""
@@ -47,9 +45,10 @@ class TaigaAPI:
                                    data=json.dumps(self.login_data))
         return login_data.json()
 
-
-    def _save_auth(self, auth_token, cfg_file):
-        pass
+    def _save_auth(self, auth_token, cfg_json, cfg_file):
+        cfg_json["auth_token"] = str(auth_token)
+        json.dump(cfg_json, cfg_file)
+        cfg_file.save()
 
     def _auth(self):
         pass
