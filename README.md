@@ -30,3 +30,11 @@ comando para ejecutar todos los tests automáticamente:
     python -m pytest
     
 Enjoy!
+
+## Conversión del reporte en markdown a docx
+
+Usamos [subprocess](https://docs.python.org/3/library/subprocess.html) 
+de python junto con [pandoc](https://pandoc.org/) para realizar la conversión de
+md a docx. Estado de prueba: solamente convierte `template_report.md` y es 
+necesario correr `md_to_docx.py` en el mismo lugar que el mencionado .md, dando
+por resultado `template_report.docx` también en el mismo directorio.  
