@@ -73,7 +73,7 @@ def test_api_download_us_failure_raises_exception(api):
 def test_api_get_done_status_id(api):
     """Test that api gets the done status id"""
     done_id = api._get_done_status()
-    assert done_id == 333
+    assert done_id == 35
 
 
 def test_api_get_done_status_not_found(api):
