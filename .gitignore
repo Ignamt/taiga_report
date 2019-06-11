@@ -1,2 +1,3 @@
 *.pyc
 _pycache_/*
+*SIEEL_report*.md
