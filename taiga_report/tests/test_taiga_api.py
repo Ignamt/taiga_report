@@ -1,37 +1,87 @@
-"""Tests for the TaigaAPI"""
-from unittest import TestCase
+"""Test for the TaigaAPI."""
+import pytest
+import requests
+
 from taiga_report import taiga_api
 
 
-class TestAPI(TestCase):
-    """Contains tests for the API class and methods"""
+@pytest.fixture
+def api():
+    """Return a new api object for each function as needed."""
+    return taiga_api.TaigaAPI("ignamt-sieel")
 
 
-    def setUp(self):
-        self.api = taiga_api.TaigaAPI("ignamt-sieel")
+def test_api_creation(api):
+    """Test the example api is instantiated correctly."""
+    assert api.slug == "ignamt-sieel"
+    assert api.auth_url == "https://taiga.leafnoise.io/api/v1/auth"
+    assert api.host == "https://taiga.leafnoise.io/api/v1/"
 
 
-    def test_api_creation(self):
-        self.assertEqual(self.api.slug, "ignamt-sieel")
-        self.assertEqual(self.api.host,
-                         "https://taiga.leafnoise.io/api/v1/")
-        self.assertEqual(self.api.auth_url,
-                         "https://taiga.leafnoise.io/api/v1/auth")
-        self.assertEqual(self.api.headers,
-                         {"content-type": "application/json",
-                          "x-disable-pagination": "True"})
+def test_api_login(api):
+    """Test that login method returns string content."""
+    login_data = api._login()
+    assert login_data
+    assert isinstance(login_data, str)
 
-    def test_login(self):
-        login_data = self.api._login()
-        self.assertEqual(login_data["username"], "ignamt")
 
-    def test_save_auth(self):
-        auth_token = "testauthtoken"
-        self.api._save_auth(auth_token, os.sep.join(["taiga_report", "tests", "test_config.py"]))
+def test_api_login_request_failure(api):
+    """Test if exception is raised when login fails."""
+    with pytest.raises(requests.exceptions.HTTPError):
+        api.auth_url = api.auth_url.replace("auth", "hola")
+        api._login()
 
-        import taiga_report.tests.test_config as config
-        self.assertEqual(config.TEST_AUTH_TOKEN, "testauthtoken")
 
-    
-    def test_auth(self):
-        pass
+def test_api_auth_with_saved_token(api):
+    """Test if _auth uses same token if already provided."""
+    api.auth_token = "testauthtoken"
+    api._auth()
+    assert api.headers["Authorization"] == "Bearer testauthtoken"
+    assert api.authenticated
+
+
+def test_api_auth_without_saved_token(api):
+    """Test if _auth saves and registers token."""
+    api.auth_token = None
+    assert not api.auth_token
+
+    api._auth()
+    assert api.authenticated
+    assert api.auth_token
+
+
+def test_add_auth_token(api):
+    """Test that token is added to headers."""
+    api._add_auth_token("holaquetal")
+    assert "Authorization" in api.headers
+    assert api.headers["Authorization"] == "Bearer holaquetal"
+
+
+def test_api_download_user_stories(api):
+    """Test that api gets list of user stories."""
+    userstories = api.download_user_stories()
+    assert isinstance(userstories, list)
+    assert len(userstories)
+
+
+def test_api_download_us_failure_raises_exception(api):
+    with pytest.raises(requests.exceptions.HTTPError):
+        api.host = api.host + "hola/"
+        api.download_user_stories()
+
+
+def test_api_get_done_status_id(api):
+    """Test that api gets the done status id"""
+    done_id = api._get_done_status()
+    assert done_id == 35
+
+
+def test_api_get_done_status_not_found(api):
+    with pytest.raises(requests.exceptions.HTTPError):
+        api.host = api.host+"/hola/"
+        api._get_done_status()
+
+
+def test_api_getting_project_id(api):
+    """Test that api can get project id."""
+    assert api.project_id == 6
