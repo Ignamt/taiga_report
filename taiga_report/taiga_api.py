@@ -4,23 +4,20 @@ import json
 import os
 
 
+
 class TaigaAPI:
     """API class to connect to and interact with the Taiga API."""
 
-    def __init__(self, project_slug):
+    def __init__(self, project, yaml_dict):
         """Init TaigaAPI with default attr to specific project."""
-        self.slug = project_slug
+        self.slug = yaml_dict[project]["slug"]
         self.authenticated = False
         self.auth_token = None
-        self.config_filename = os.path.join("taiga_report", "api.cfg")
-        self.host = "https://taiga.leafnoise.io/api/v1/"
+        self.host = yaml_dict["host"]
         self.auth_url = self.host + "auth"
-        self.headers = {"content-type": "application/json",
-                        "x-disable-pagination": "True"}
-        self.login_data = {"type": "normal",
-                           "username": "ignamt",
-                           "password": "tanoira1"}
-        self.project_id = self._project_id
+        self.headers = yaml_dict["headers"]
+        self.login_data = yaml_dict["login_data"]
+        self.project_id = yaml_dict[project]["id"] or self._project_id
 
     def _login(self):
         """Log the api object to Taiga's API.
@@ -53,7 +50,18 @@ class TaigaAPI:
         self.headers["Authorization"] = "Bearer " + auth_token
 
     @property
-    def _project_id(self):
+    def _project_id(self, yaml_dict):
+        """Retrieve the project id at init.
+        
+        As it is a property, it can't be reassigned or deleted.
+        
+        RETURNS: An int object containing the project id.
+
+        RAISES:
+            -requests.exceptions.HTTPError: If the request fails for any
+                reason and the status code is not 200
+
+        """
         if not self.authenticated:
             self._auth()
         url = self.host + "projects/by_slug?slug=" + self.slug
