@@ -60,7 +60,7 @@ class Report:
     def __init__(self, project, yaml_dict):
         """Set up attributes for the instance."""
         self._report = dict()
-        self.project = project
+        self.project = project.upper()
         self._report_sections = yaml_dict[project]["report_sections"]
 
     def classify_user_story(self, us):
@@ -88,7 +88,7 @@ class Report:
         if Path(filename+".md").is_file():
             filename += "_1"
         while Path(filename+".md").is_file():
-            filename = filename.replace(filename[-1], str(int(filename[-1])+1))
+            filename = filename[:-1] + str(int(filename[-1])+1)
         filename += ".md"
         return filename
 
@@ -124,7 +124,7 @@ class Report:
 
 
 def md_title(content):
-    return "# {}\n\n".format(content)
+    return "# {}\n\n".format(content.upper())
 
 
 def md_section(content):
