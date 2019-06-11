@@ -1,5 +1,6 @@
 """Contains classes for the different sections of the report."""
 import datetime as dt
+from pathlib import Path
 
 
 class UserStory:
@@ -12,15 +13,15 @@ class UserStory:
         - us: Dict with all the info that comes from the Taiga
               API"""
         self.subject = us["subject"]
-        self.epic = us["epics"][0]["subject"]
-        self.tags = us["tags"][0]
+        self.epic = us["epics"][0]["subject"] if us["epics"] else []
+        self.tags = us["tags"][0] if us["tags"] else []
         self.section = self._section
         self.subtasks = us["tasks"]
-        if us["due_date"]:
-            self.due_date = dt.datetime.strptime(us["due_date"],
-                                                 "%Y-%m-%dT%H:%M:%S.%fZ")
-        else:
-            self.due_date = None
+        # if us["due_date"]:
+        #     self.due_date = dt.datetime.strptime(us["due_date"],
+        #                                          "%Y-%m-%dT%H:%M:%S.%fZ")
+        # else:
+        #     self.due_date = None
 
     @property
     def _section(self):
@@ -79,16 +80,49 @@ class Report:
             else:
                 self._report[us.section][us.epic].append(us.subject)
 
+    def _check_filename(self):
+        year = dt.date.today().year
+        month = dt.date.today().month
+        filename = self.project + "_report_{}-{}".format(month, year)
+        if Path(filename+".md").is_file():
+            filename += "_1"
+        while Path(filename+".md").is_file():
+            filename = filename.replace(filename[-1], str(int(filename[-1])+1))
+        filename += ".md"
+        return filename
+
     def print_markdown(self):
-        filename = self.project + "_report.md"
+        filename = self._check_filename()
         with open(filename, "a+") as file:
-            file.write(title(self.project))
+            file.write(md_title(self.project))
             for section in self._report_sections:
-                self._print_section_md(section, file)
+                if section in self._report:
+                    self._print_section_md(section, file)
                 
 
     def _print_section_md(self, section, file):
-        file.write(section())
+        file.write(md_section(section))
+        rep_section = self._report[section]
+        if rep_section.get("user_stories"):
+                self._print_userstories_md(rep_section["user_stories"], file)
+        
+        for epic in self._report[section]:
+            if epic == "user_stories":
+                continue
+            
+            self._print_epic_md(section, epic, file)
+
+    def _print_epic_md(self, section, epic, file):
+        file.write(md_epic(epic))
+        self._print_userstories_md(self._report[section][epic], file)
+
+    def _print_userstories_md(self, userstories, file):
+        for us in userstories:
+            file.write(md_user_story(us))
+        # Add one final newline to separate from other parts of the report
+        file.write("\n")
+
+
 
 
 
@@ -97,12 +131,12 @@ def md_title(content):
 
 
 def md_section(content):
-    return capitalize("## {}\n\n".format(content))
+    return "## {}\n\n".format(content.capitalize())
 
 
 def md_epic(content):
-    return capitalize("### {}\n\n".format(content))
+    return "### {}\n\n".format(content.capitalize())
 
 
 def md_user_story(content):
-    return capitalize("* {}\n".format(content))
+    return "* {}\n".format(content.capitalize())
