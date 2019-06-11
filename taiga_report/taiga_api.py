@@ -69,8 +69,9 @@ class TaigaAPI:
         """
         if not self.authenticated:
             self._auth()
-        # done_id = self._get_done_status()
-        us_uri = "userstories?project={}".format(self.project_id)
+        done_id = self._get_done_status()
+        us_uri = "userstories?project={}&status={}".format(self.project_id,
+                                                           done_id)
         project_us_url = self.host + us_uri
         user_stories = requests.get(project_us_url,
                                     headers=self.headers)
@@ -80,13 +81,12 @@ class TaigaAPI:
 
     def _get_done_status(self):
         """Get the status id from the API to filter user stories."""
-        url = self.host + "userstory-statuses"
+        url = self.host + "userstory-statuses?project="+str(self.project_id)
         us_statuses = requests.get(url, headers=self.headers)
         us_statuses.raise_for_status()
 
         for us_status in us_statuses.json():
             if us_status.get("slug") == "done":
-                print("US Status: ", us_status)
                 return us_status["id"]
 
 
