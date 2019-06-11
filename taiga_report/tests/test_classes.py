@@ -84,3 +84,7 @@ class TestReportClass:
                                          "Epic": []}
         report.classify_user_story(us)
         assert "Subject" in report._report["expedientes"]["Epic"]
+
+
+class TestReportPrinter:
+    """Tests for the report printers"""
