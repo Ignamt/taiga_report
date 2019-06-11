@@ -7,7 +7,7 @@ host: https://taiga.leafnoise.io/api/v1/
 
 headers:
     content-type: application/json
-    x-disable-pagination: True
+    x-disable-pagination: "True"
 
 sieel:
     slug: ignamt-sieel

@@ -6,7 +6,31 @@ from taiga_report import classes
 
 @pytest.fixture
 def report():
-    return classes.Report("SIEEL")
+    yaml_dict = {
+        'login_data': {
+            'type': 'normal',
+            'username': 'ignamt',
+            'password': 'tanoira1'
+        },
+        'host': 'https://taiga.leafnoise.io/api/v1/',
+        'headers': {
+            'content-type': 'application/json',
+            'x-disable-pagination': 'True'
+        },
+        'sieel': {
+            'slug': 'ignamt-sieel',
+            'id': 6,
+            'done_id': 35,
+            'report_sections': [
+                'general',
+                'expedientes',
+                'remitos',
+                'administracion'
+            ]
+        }
+    }
+
+    return classes.Report("sieel", yaml_dict)
 
 
 @pytest.fixture
@@ -34,29 +58,11 @@ class TestUserStoryClass():
         assert us.section == "expedientes"
 
 
-class TestEpicClass:
-    """Epic class related tests."""
-
-    def test_class_creation(self):
-        """Tests creation of an Epic instance."""
-        epic = classes.Epic("expedientes")
-
-
-class TestSectionClass:
-    """Section class related tests."""
-
-    def test_class_creation(self):
-        """Tests creation of a Section instance."""
-        section = classes.Section(name="expedientes")
-
-
-
 class TestReportClass:
     """Test Report creation and inner structure methods."""
 
-    def test_class_creation(self):
+    def test_class_creation(self, report):
         """Tests creation of a Report instance with attribute."""
-        report = classes.Report("SIEEL")
         assert report.project == "SIEEL"
 
     def test_classify_section_not_in_report_no_epic(self, report, us):

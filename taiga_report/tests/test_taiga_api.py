@@ -8,7 +8,31 @@ from taiga_report import taiga_api
 @pytest.fixture
 def api():
     """Return a new api object for each function as needed."""
-    return taiga_api.TaigaAPI("ignamt-sieel")
+    yaml_dict = {
+        'login_data': {
+            'type': 'normal',
+            'username': 'ignamt',
+            'password': 'tanoira1'
+        },
+        'host': 'https://taiga.leafnoise.io/api/v1/',
+        'headers': {
+            'content-type': 'application/json',
+            'x-disable-pagination': 'True'
+        },
+        'sieel': {
+            'slug': 'ignamt-sieel',
+            'id': 6,
+            'done_id': 35,
+            'report_sections': [
+                'general',
+                'expedientes',
+                'remitos',
+                'administracion'
+            ]
+        }
+    }
+    
+    return taiga_api.TaigaAPI("sieel", yaml_dict)
 
 
 def test_api_creation(api):
