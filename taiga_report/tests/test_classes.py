@@ -1,23 +1,40 @@
 """Tests for classes.py."""
-from unittest import TestCase
+import pytest
+
 from taiga_report import classes
 
 
-class TestUserStoryClass(TestCase):
-    """UserStory class related tests."""
+@pytest.fixture
+def report():
+    return classes.Report("SIEEL")
 
-    def test_class_creation(self):
-        """Tests creation of a UserStory instance."""
-        us = {"subject": "Prueba de Clase",
-              "epics": [{"subject": "Test Case"}],
-              "tags": ["expedientes"],
+
+@pytest.fixture
+def us():
+    us = {"subject": "Subject",
+              "epics": [{"subject": "Epic"}],
+              "tags": [["expedientes"]],
               "tasks": [],
               "due_date": None}
+    return classes.UserStory(us)
 
-        userstory = classes.UserStory(us)
+
+class TestUserStoryClass():
+    """UserStory class related tests."""
+
+    def test_class_creation(self, us):
+        """Tests creation of a UserStory instance."""
+        assert us.subject == "Subject"
+        assert us.epic == "Epic"
+        assert us.tags == ["expedientes"]
+
+    def test_userstory_section(self, us):
+        us.tags = ["expedientes", "abm"]
+        assert "abm" in us.tags
+        assert us.section == "expedientes"
 
 
-class TestEpicClass(TestCase):
+class TestEpicClass:
     """Epic class related tests."""
 
     def test_class_creation(self):
@@ -25,7 +42,7 @@ class TestEpicClass(TestCase):
         epic = classes.Epic("expedientes")
 
 
-class TestSectionClass(TestCase):
+class TestSectionClass:
     """Section class related tests."""
 
     def test_class_creation(self):
@@ -33,10 +50,37 @@ class TestSectionClass(TestCase):
         section = classes.Section(name="expedientes")
 
 
-class TestReportClass(TestCase):
-    """Report class related tests."""
+
+class TestReportClass:
+    """Test Report creation and inner structure methods."""
 
     def test_class_creation(self):
         """Tests creation of a Report instance with attribute."""
         report = classes.Report("SIEEL")
-        self.assertTrue(hasattr(report, "sections"))
+        assert report.project == "SIEEL"
+
+    def test_classify_section_not_in_report_no_epic(self, report, us):
+        us.epic = ""
+        report.classify_user_story(us)
+        assert "Subject" in report._report["expedientes"]["user_stories"]
+
+    def test_classify_section_in_report_no_epic(self, report, us):
+        us.epic = ""
+        report._report["expedientes"] = {"user_stories": []}
+        report.classify_user_story(us)
+        assert "Subject" in report._report["expedientes"]["user_stories"]
+
+    def test_classify_section_not_in_report_with_epic(self, report, us):
+        report.classify_user_story(us)
+        assert "Subject" in report._report["expedientes"]["Epic"]
+
+    def test_classify_section_in_report_with_epic(self, report, us):
+        report._report["expedientes"] = {"user_stories": []}
+        report.classify_user_story(us)
+        assert "Subject" in report._report["expedientes"]["Epic"]
+
+    def test_classify_epic_in_report(self, report, us):
+        report._report["expedientes"] = {"user_stories": [],
+                                         "Epic": []}
+        report.classify_user_story(us)
+        assert "Subject" in report._report["expedientes"]["Epic"]
