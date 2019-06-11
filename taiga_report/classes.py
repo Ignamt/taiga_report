@@ -57,12 +57,11 @@ class Section:
 class Report:
     """Gathers all sections and prints itself in various formats."""
 
-    def __init__(self, project):
+    def __init__(self, project, yaml_dict):
         """Set up attributes for the instance."""
         self._report = dict()
         self.project = project
-        self._report_sections = ["general", "expedientes",
-                                 "remitos", "administracion"]
+        self._report_sections = yaml_dict[project]["report_sections"]
 
     def classify_user_story(self, us):
         if us.section not in self._report:
