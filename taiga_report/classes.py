@@ -8,10 +8,12 @@ class UserStory:
 
     def __init__(self, us):
         """Set up attributes for the instance.
-        
+
         Parameters:
         - us: Dict with all the info that comes from the Taiga
-              API"""
+            API
+
+        """
         self.subject = us["subject"]
         self.epic = us["epics"][0]["subject"] if us["epics"] else []
         self.tags = us["tags"][0] if us["tags"] else []
@@ -30,7 +32,6 @@ class UserStory:
                 return tag
             else:
                 return None
-        
 
 
 class Epic(list):
@@ -60,7 +61,8 @@ class Report:
         """Set up attributes for the instance."""
         self._report = dict()
         self.project = project
-        self._report_sections = ["general", "expedientes", "remitos", "administracion"]
+        self._report_sections = ["general", "expedientes",
+                                 "remitos", "administracion"]
 
     def classify_user_story(self, us):
         if us.section not in self._report:
@@ -98,18 +100,17 @@ class Report:
             for section in self._report_sections:
                 if section in self._report:
                     self._print_section_md(section, file)
-                
 
     def _print_section_md(self, section, file):
         file.write(md_section(section))
         rep_section = self._report[section]
         if rep_section.get("user_stories"):
-                self._print_userstories_md(rep_section["user_stories"], file)
-        
+            self._print_userstories_md(rep_section["user_stories"], file)
+
         for epic in self._report[section]:
             if epic == "user_stories":
                 continue
-            
+
             self._print_epic_md(section, epic, file)
 
     def _print_epic_md(self, section, epic, file):
@@ -121,9 +122,6 @@ class Report:
             file.write(md_user_story(us))
         # Add one final newline to separate from other parts of the report
         file.write("\n")
-
-
-
 
 
 def md_title(content):
