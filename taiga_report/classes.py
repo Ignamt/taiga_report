@@ -80,8 +80,8 @@ class Report:
 
             else:
                 self._report[us.section][us.epic].append(us.subject)
-
-    def _check_filename(self):
+        
+    def _check_filename(self, ext):
         """Generate new report filename.
 
         Checks the file system if there is a file for the current month's
@@ -91,6 +91,7 @@ class Report:
         RETURNS: filename
 
         """
+
         year = dt.date.today().year
         month = str(dt.date.today().month).rjust(2, "0")
         filename = self.project + "_report_{}-{}".format(month, year)
@@ -106,6 +107,7 @@ class MarkdownPrinter:
     
     @classmethod
     def print_markdown(cls, report):
+        """Print the report in markdown format into a file."""
         filename = report._check_filename(".md")
         with open(filename, "a+") as file:
             file.write(cls.md_title(report.project))
