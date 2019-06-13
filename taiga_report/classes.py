@@ -1,7 +1,8 @@
 """Contains classes for the different sections of the report."""
 import datetime as dt
 from pathlib import Path
-
+from docx import Document
+from docx.shared import Inches
 
 class UserStory:
     """Contains all the US info needed for the report."""
@@ -78,8 +79,8 @@ class Report:
 
             else:
                 self._report[us.section][us.epic].append(us.subject)
-
-    def _check_filename(self):
+        
+    def _check_filename(self, ext):
         """Generate new report filename.
 
         Checks the file system if there is a file for the current month's
@@ -89,26 +90,32 @@ class Report:
         RETURNS: filename
 
         """
+
         year = dt.date.today().year
         month = str(dt.date.today().month).rjust(2, "0")
         filename = self.project + "_report_{}-{}".format(month, year)
-        if Path(filename+".md").is_file():
+        if Path(filename+ext).is_file():
             filename += "_1"
-        while Path(filename+".md").is_file():
-            filename = filename[:-1] + str(int(filename[-1])+1)
-        filename += ".md"
+        while Path(filename+ext).is_file():
+            filename = filename.replace(filename[-1], str(int(filename[-1])+1))
+        filename += ext
         return filename
 
-    def print_markdown(self):
+class MarkdownPrinter:
+    """Prints the report in markdown format."""
+    
+    @classmethod
+    def print_markdown(cls, report):
         """Print the report in markdown format into a file."""
-        filename = self._check_filename()
+        filename = report._check_filename(".md")
         with open(filename, "a+") as file:
-            file.write(md_title(self.project))
-            for section in self._report_sections:
-                if section in self._report:
-                    self._print_section_md(section, file)
-
-    def _print_section_md(self, section, file):
+            file.write(cls.md_title(report.project))
+            for section in report._report_sections:
+                if section in report._report:
+                    cls._print_section_md(section, file, report)
+    
+    @classmethod
+    def _print_section_md(cls, section, file, report):
         """Write a section with it's epics and US to a file.
 
         PARAMETERS:
@@ -116,18 +123,19 @@ class Report:
             - file: file-like object to which to print to.
 
         """
-        file.write(md_section(section))
-        rep_section = self._report[section]
+        file.write(cls.md_section(section))
+        rep_section = report._report[section]
         if rep_section.get("user_stories"):
-            self._print_userstories_md(rep_section["user_stories"], file)
+            cls._print_userstories_md(rep_section["user_stories"], file)
 
-        for epic in self._report[section]:
+        for epic in report._report[section]:
             if epic == "user_stories":
                 continue
 
-            self._print_epic_md(section, epic, file)
-
-    def _print_epic_md(self, section, epic, file):
+            cls._print_epic_md(section, epic, file, report)
+    
+    @classmethod
+    def _print_epic_md(cls, section, epic, file, report):
         """Write an epic with it's US to a section in a file.
 
         PARAMETERS:
@@ -136,10 +144,11 @@ class Report:
             - file: file-like object to which to print to
 
         """
-        file.write(md_epic(epic))
-        self._print_userstories_md(self._report[section][epic], file)
-
-    def _print_userstories_md(self, userstories, file):
+        file.write(cls.md_epic(epic))
+        cls._print_userstories_md(report._report[section][epic], file)
+    
+    @classmethod
+    def _print_userstories_md(cls, userstories, file):
         """Write US to a file.
 
         PARAMETERS:
@@ -147,54 +156,106 @@ class Report:
 
         """
         for us in userstories:
-            file.write(md_user_story(us))
+            file.write(cls.md_user_story(us))
         # Add one final newline to separate from other parts of the report
         file.write("\n")
+    
+    @classmethod
+    def md_title(cls, content):
+        """Format content string as Markdown h1.
 
+        PARAMETERS:
+            - content: string with the project title.
 
-def md_title(content):
-    """Format content string as Markdown h1.
+        RETURNS: str formatted as a <h1> for the title.
 
-    PARAMETERS:
-        - content: string with the project title.
+        """
+        return "# {}\n\n".format(content)
+    
+    @classmethod
+    def md_section(cls, content):
+        """Format content string as Markdown h2.
 
-    RETURNS: str formatted as a <h1> for the title.
+        PARAMETERS:
+            - content: string with the project section.
 
-    """
-    return "# {}\n\n".format(content.upper())
+        RETURNS: str formatted as a <h2> for the section.
 
+        """
+        return "## {}\n\n".format(content.capitalize())
 
-def md_section(content):
-    """Format content string as Markdown h2.
+    @classmethod
+    def md_epic(cls, content):
+        """Format content string as Markdown h3.
 
-    PARAMETERS:
-        - content: string with the project section.
+        PARAMETERS:
+            - content: string with the project epic.
 
-    RETURNS: str formatted as a <h2> for the section.
+        RETURNS: str formatted as a <h3> for the epic.
 
-    """
-    return "## {}\n\n".format(content.capitalize())
+        """
+        return "### {}\n\n".format(content.capitalize())
+    
+    @classmethod
+    def md_user_story(cls, content):
+        """Format content string as Markdown list item.
 
+        PARAMETERS:
+            - content: string with the project user story.
 
-def md_epic(content):
-    """Format content string as Markdown h3.
+        RETURNS: str formatted as a  list for the user story.
 
-    PARAMETERS:
-        - content: string with the project epic.
+        """
+        return "* {}\n".format(content.capitalize())
 
-    RETURNS: str formatted as a <h3> for the epic.
+class DocxPrinter:
+    """Prints the report in docx format."""
+    
+    @classmethod
+    def print_docx(cls, report):
+        filename = report._check_filename(".docx")
+        document = Document()
+        cls.docx_title(document, report.project)
+        for section in report._report_sections:
+            if section in report._report:
+                cls._print_section_docx(section, document, report)  
+        document.save(filename)
+    
+    @classmethod
+    def _print_section_docx(cls, section, document, report):
+        cls.docx_section(document, section)
+        rep_section = report._report[section]
+        if rep_section.get("user_stories"):
+            cls._print_userstories_docx(rep_section["user_stories"], document)
 
-    """
-    return "### {}\n\n".format(content.capitalize())
+        for epic in report._report[section]:
+            if epic == "user_stories":
+                continue 
 
+            cls._print_epic_docx(section, epic, document, report)   
 
-def md_user_story(content):
-    """Format content string as Markdown list item.
+    @classmethod
+    def _print_epic_docx(cls, section, epic, document, report):
+        cls.docx_epic(document, epic)
+        cls._print_userstories_docx(report._report[section][epic], document)
+    
+    @classmethod
+    def _print_userstories_docx(cls, userstories, document):
+        for us in userstories:
+            cls.docx_user_story(document, us)
 
-    PARAMETERS:
-        - content: string with the project user story.
+    @classmethod
+    def docx_title(cls, document, content):
+        document.add_heading(content.capitalize(), level=0)
 
-    RETURNS: str formatted as a  list for the user story.
+    @classmethod
+    def docx_section(cls, document, content):
+        document.add_heading(content.capitalize(), level=1)
 
-    """
-    return "* {}\n".format(content.capitalize())
+    @classmethod
+    def docx_user_story(cls, document, content):
+        document.add_paragraph(content.capitalize(), style='List Bullet 2')
+
+    @classmethod
+    def docx_epic(cls, document, content):
+        document.add_heading(content.capitalize(), level=5)
