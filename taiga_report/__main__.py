@@ -5,12 +5,13 @@ from .taiga_api import TaigaAPI
 from .classes import Report, UserStory, MarkdownPrinter, DocxPrinter
 
 with open("taiga_report/api.yaml", "r") as yaml_file:
-    yaml_dict = yaml.load(yaml_file)
-    
-api = TaigaAPI("sieel", yaml_dict)
+    yaml_dict = yaml.load(yaml_file, Loader=yaml.FullLoader)
+
+project = "sieel"  # TODO: Make it parameterized via CLI, bot or front-end
+api = TaigaAPI(project, yaml_dict)
 us_list = api.download_user_stories()
 
-report = Report("sieel", yaml_dict)
+report = Report(project, yaml_dict)
 
 for us_json in us_list:
     us = UserStory(us_json)
