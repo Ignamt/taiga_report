@@ -1,0 +1,20 @@
+login_data:
+    type: normal
+    username: ignamt
+    password: tanoira1
+
+host: https://taiga.leafnoise.io/api/v1/
+
+headers:
+    content-type: application/json
+    x-disable-pagination: "True"
+
+sieel:
+    slug: ignamt-sieel
+    id: 6
+    done_id: 35
+    report_sections:
+        - general
+        - expedientes
+        - remitos
+        - administracion
