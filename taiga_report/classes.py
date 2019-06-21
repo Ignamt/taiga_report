@@ -4,7 +4,6 @@ from pathlib import Path
 from docx import Document
 
 
-
 class UserStory:
     """Contains all the US info needed for the report."""
 
@@ -80,7 +79,7 @@ class Report:
 
             else:
                 self._report[us.section][us.epic].append(us.subject)
-        
+
     def _check_filename(self, ext):
         """Generate new report filename.
 

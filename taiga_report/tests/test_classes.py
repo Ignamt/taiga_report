@@ -124,17 +124,18 @@ class TestReportPrintMethods:
         filename = "SIEEL_report_{}-{}".format(month, year) + ext
         assert report._check_filename(ext) == filename
 
-
+class TestMarkdownPrinterClass:
+    """Tests for the markdown printer class."""
+    
 class TestDocxPrinterClass:
     """Tests for the docx printer class. 
-    
+
     For now(and until a better argument is found)* the tests only checks the 
     creation of content in the Document.
 
     *: the Report class is already tested. All that the docx printer does is
     iterate over the report and create the title, section, etc.   
     """
-
 
     def test_title_creation(self, document, report):
         title = classes.DocxPrinter.docx_title(document, report.project)
@@ -162,5 +163,3 @@ class TestDocxPrinterClass:
         assert isinstance(user_story, docx.text.paragraph.Paragraph)
         assert user_story.text == generic_us
         assert user_story.style.name == "List Bullet 2"
-
-
