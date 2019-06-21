@@ -71,7 +71,7 @@ class TaigaAPI:
 
     def download_user_stories(self):
         """Get the user stories from the project at the specified slug.
-        
+
         RETURNS: List of dicts with all the info about the user stories in the
         'DONE' category
         """
