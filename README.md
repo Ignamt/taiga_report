@@ -38,3 +38,15 @@ de python junto con [pandoc](https://pandoc.org/) para realizar la conversión d
 md a docx. Estado de prueba: solamente convierte `template_report.md` y es 
 necesario correr `md_to_docx.py` en el mismo lugar que el mencionado .md, dando
 por resultado `template_report.docx` también en el mismo directorio.  
+
+## Ejecutar tests
+
+Para correr las tests nos paramos en taiga_report/ y hacemos:
+
+    pytest
+
+Si queremos correr tests específicas podemos usar pytest de la siguiente manera:
+
+    pytest -k "String representativa de la/s test/s que queremos correr, puede 
+    ser el nombre de la clase"
+    
