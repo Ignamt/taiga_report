@@ -124,9 +124,32 @@ class TestReportPrintMethods:
         filename = "SIEEL_report_{}-{}".format(month, year) + ext
         assert report._check_filename(ext) == filename
 
+
 class TestMarkdownPrinterClass:
     """Tests for the markdown printer class."""
-    
+
+    def test_md_title_creation(self):
+        title = "foo title"
+        md_title = "# {}\n\n".format(title)
+        assert classes.MarkdownPrinter.md_title(title) == md_title
+
+    def test_md_section_creation(self):
+        section = "foo section".capitalize()
+        md_section = "## {}\n\n".format(section)
+        assert classes.MarkdownPrinter.md_section(section) == md_section
+
+    def test_md_epic_creation(self):
+        epic = "foo epic".capitalize()
+        md_epic = "### {}\n\n".format(epic)
+        assert classes.MarkdownPrinter.md_epic(epic) == md_epic
+
+    def test_md_user_story_creation(self):
+        user_story = "foo user_story".capitalize()
+        md_user_story = "* {}\n".format(user_story)
+        assert classes.MarkdownPrinter.md_user_story(
+            user_story) == md_user_story
+
+
 class TestDocxPrinterClass:
     """Tests for the docx printer class. 
 
@@ -134,7 +157,7 @@ class TestDocxPrinterClass:
     creation of content in the Document.
 
     *: the Report class is already tested. All that the docx printer does is
-    iterate over the report and create the title, section, etc.   
+    iterate over the report and create the title, sections, etc.   
     """
 
     def test_title_creation(self, document, report):
