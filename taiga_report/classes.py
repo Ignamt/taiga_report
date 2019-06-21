@@ -3,6 +3,7 @@ import datetime as dt
 from pathlib import Path
 from docx import Document
 
+
 class UserStory:
     """Contains all the US info needed for the report."""
 
@@ -78,7 +79,7 @@ class Report:
 
             else:
                 self._report[us.section][us.epic].append(us.subject)
-        
+
     def _check_filename(self, ext):
         """Generate new report filename.
 
@@ -167,42 +168,6 @@ class MarkdownPrinter:
             file.write(cls.md_user_story(us))
         # Add one final newline to separate from other parts of the report
         file.write("\n")
-    
-    @classmethod
-    def md_title(cls, content):
-        return "# {}\n\n".format(content)
-    
-    @classmethod
-    def md_section(cls, content):
-        return "## {}\n\n".format(content.capitalize())
-
-    @classmethod
-    def md_epic(cls, content):
-        return "### {}\n\n".format(content.capitalize())
-    
-    @classmethod
-    def md_user_story(cls, content):
-        return "* {}\n".format(content.capitalize())
-
-class DocxPrinter:
-    """Prints the report in docx format."""
-    
-    @classmethod
-    def print_docx(cls, report):
-        filename = report._check_filename(".docx")
-        document = Document()
-        cls.docx_title(document, report.project)
-        for section in report._report_sections:
-            if section in report._report:
-                cls._print_section_docx(section, document, report)  
-        document.save(filename)
-    
-    @classmethod
-    def _print_section_docx(cls, section, document, report):
-        cls.docx_section(document, section)
-        rep_section = report._report[section]
-        if rep_section.get("user_stories"):
-            cls._print_userstories_docx(rep_section["user_stories"], document)
 
     @classmethod
     def md_title(cls, content):
@@ -290,7 +255,7 @@ class DocxPrinter:
     def _print_epic_docx(cls, section, epic, document, report):
         cls.docx_epic(document, epic)
         cls._print_userstories_docx(report._report[section][epic], document)
-    
+
     @classmethod
     def _print_userstories_docx(cls, userstories, document):
         for us in userstories:
