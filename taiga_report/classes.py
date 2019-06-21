@@ -2,7 +2,7 @@
 import datetime as dt
 from pathlib import Path
 from docx import Document
-from docx.shared import Inches
+
 
 class UserStory:
     """Contains all the US info needed for the report."""
@@ -101,9 +101,18 @@ class Report:
         filename += ext
         return filename
 
+
 class MarkdownPrinter:
-    """Prints the report in markdown format."""
-    
+    """Prints the report in markdown format.
+
+    Parameters:
+        report: Report instance to print in markdown.
+
+    To use:
+        MarkdownPrinter.print_markdown(report)
+
+    """
+
     @classmethod
     def print_markdown(cls, report):
         """Print the report in markdown format into a file."""
@@ -113,7 +122,7 @@ class MarkdownPrinter:
             for section in report._report_sections:
                 if section in report._report:
                     cls._print_section_md(section, file, report)
-    
+
     @classmethod
     def _print_section_md(cls, section, file, report):
         """Write a section with it's epics and US to a file.
@@ -133,7 +142,7 @@ class MarkdownPrinter:
                 continue
 
             cls._print_epic_md(section, epic, file, report)
-    
+
     @classmethod
     def _print_epic_md(cls, section, epic, file, report):
         """Write an epic with it's US to a section in a file.
@@ -146,7 +155,7 @@ class MarkdownPrinter:
         """
         file.write(cls.md_epic(epic))
         cls._print_userstories_md(report._report[section][epic], file)
-    
+
     @classmethod
     def _print_userstories_md(cls, userstories, file):
         """Write US to a file.
@@ -159,7 +168,7 @@ class MarkdownPrinter:
             file.write(cls.md_user_story(us))
         # Add one final newline to separate from other parts of the report
         file.write("\n")
-    
+
     @classmethod
     def md_title(cls, content):
         """Format content string as Markdown h1.
@@ -171,7 +180,7 @@ class MarkdownPrinter:
 
         """
         return "# {}\n\n".format(content)
-    
+
     @classmethod
     def md_section(cls, content):
         """Format content string as Markdown h2.
@@ -195,7 +204,7 @@ class MarkdownPrinter:
 
         """
         return "### {}\n\n".format(content.capitalize())
-    
+
     @classmethod
     def md_user_story(cls, content):
         """Format content string as Markdown list item.
@@ -208,9 +217,17 @@ class MarkdownPrinter:
         """
         return "* {}\n".format(content.capitalize())
 
+
 class DocxPrinter:
-    """Prints the report in docx format."""
-    
+    """Prints the report in docx format.
+
+    Parameters:
+        report: Report instance to print in docx.
+
+    To use:
+        DocxPrinter.print_markdown(report)
+    """
+
     @classmethod
     def print_docx(cls, report):
         filename = report._check_filename(".docx")
@@ -218,9 +235,9 @@ class DocxPrinter:
         cls.docx_title(document, report.project)
         for section in report._report_sections:
             if section in report._report:
-                cls._print_section_docx(section, document, report)  
+                cls._print_section_docx(section, document, report)
         document.save(filename)
-    
+
     @classmethod
     def _print_section_docx(cls, section, document, report):
         cls.docx_section(document, section)
@@ -230,15 +247,15 @@ class DocxPrinter:
 
         for epic in report._report[section]:
             if epic == "user_stories":
-                continue 
+                continue
 
-            cls._print_epic_docx(section, epic, document, report)   
+            cls._print_epic_docx(section, epic, document, report)
 
     @classmethod
     def _print_epic_docx(cls, section, epic, document, report):
         cls.docx_epic(document, epic)
         cls._print_userstories_docx(report._report[section][epic], document)
-    
+
     @classmethod
     def _print_userstories_docx(cls, userstories, document):
         for us in userstories:
@@ -246,16 +263,16 @@ class DocxPrinter:
 
     @classmethod
     def docx_title(cls, document, content):
-        document.add_heading(content.capitalize(), level=0)
+        return document.add_heading(content.capitalize(), level=0)
 
     @classmethod
     def docx_section(cls, document, content):
-        document.add_heading(content.capitalize(), level=1)
+        return document.add_heading(content.capitalize(), level=1)
 
     @classmethod
     def docx_user_story(cls, document, content):
-        document.add_paragraph(content.capitalize(), style='List Bullet 2')
+        return document.add_paragraph(content.capitalize(), style='List Bullet 2')
 
     @classmethod
     def docx_epic(cls, document, content):
-        document.add_heading(content.capitalize(), level=5)
+        return document.add_heading(content.capitalize(), level=5)
