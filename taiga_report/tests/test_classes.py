@@ -126,7 +126,14 @@ class TestReportPrintMethods:
 
 
 class TestMarkdownPrinterClass:
-    """Tests for the markdown printer class."""
+    """Tests for the markdown printer class.
+    
+    For now(and until a better argument is found)* the tests only checks the 
+    creation of content in the markdown.
+
+    *: the Report class is already tested. All that the markdown printer does is
+    iterate over the report and create the title, sections, etc.   
+    """
 
     def test_md_title_creation(self):
         title = "foo title"
