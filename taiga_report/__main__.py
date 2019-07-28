@@ -20,9 +20,3 @@ for us_json in us_list:
 # MarkdownPrinter.print_markdown(report)
 DocxPrinter.print_docx(report)
 print("Success :)")
-<<<<<<< HEAD
-=======
-
-
-    
->>>>>>> 4e4dfcd756ce39dc948594a54fd4b9a0f77d5694
