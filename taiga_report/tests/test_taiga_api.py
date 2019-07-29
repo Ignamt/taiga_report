@@ -84,23 +84,30 @@ def test_add_auth_token(api):
 def test_api_download_user_stories(api):
     """Test that api gets list of user stories."""
     userstories = api.download_user_stories()
+    print("User stories: " + str(userstories))
     assert isinstance(userstories, list)
     assert len(userstories)
 
+def test_api_download_user_stories_empty_response_raises_exception(api):
+    pass
+
 
 def test_api_download_us_failure_raises_exception(api):
+    """Test that download us method raises exception upon error."""
     with pytest.raises(requests.exceptions.HTTPError):
         api.host = api.host + "hola/"
         api.download_user_stories()
 
 
 def test_api_get_done_status_id(api):
-    """Test that api gets the done status id"""
+    """Test that api gets the done status id."""
+    api._auth()
     done_id = api._get_done_status()
     assert done_id == 35
 
 
 def test_api_get_done_status_not_found(api):
+    """Test that HTTPError is raised when request fails."""
     with pytest.raises(requests.exceptions.HTTPError):
         api.host = api.host+"/hola/"
         api._get_done_status()

@@ -52,9 +52,9 @@ class TaigaAPI:
     @property
     def _project_id(self, yaml_dict):
         """Retrieve the project id at init.
-        
+
         As it is a property, it can't be reassigned or deleted.
-        
+
         RETURNS: An int object containing the project id.
 
         RAISES:
@@ -81,20 +81,26 @@ class TaigaAPI:
         us_uri = "userstories?project={}&status={}".format(self.project_id,
                                                            done_id)
         project_us_url = self.host + us_uri
+        print("Downloading User Stories from " + project_us_url)
         user_stories = requests.get(project_us_url,
                                     headers=self.headers)
         user_stories.raise_for_status()
+        us_json = user_stories.json()
+        if not us_json:
+            raise ValueError("No user stories were found.")
 
-        return user_stories.json()
+        return us_json
 
     def _get_done_status(self):
         """Get the status id from the API to filter user stories."""
         url = self.host + "userstory-statuses?project="+str(self.project_id)
+        print("Getting status info from " + url)
         us_statuses = requests.get(url, headers=self.headers)
         us_statuses.raise_for_status()
 
         for us_status in us_statuses.json():
             if us_status.get("slug") == "done":
+                print("Done status id: " + str(us_status["id"]))
                 return us_status["id"]
 
 
