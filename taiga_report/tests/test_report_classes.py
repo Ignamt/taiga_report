@@ -1,8 +1,10 @@
 """Tests for classes.py."""
-import pytest
 import datetime as dt
 
-from taiga_report import classes
+import pytest
+import docx
+
+from taiga_report import report_classes as rc
 
 
 @pytest.fixture
@@ -32,7 +34,7 @@ def report():
         }
     }
 
-    return classes.Report("sieel", yaml_dict)
+    return rc.Report("sieel", yaml_dict)
 
 
 @pytest.fixture
@@ -43,7 +45,7 @@ def us():
           "tags": [["expedientes"]],
           "tasks": [],
           "due_date": None}
-    return classes.UserStory(us)
+    return rc.UserStory(us)
 
 
 class TestUserStoryClass():
@@ -100,17 +102,3 @@ class TestReportClass:
         report.classify_user_story(us)
         assert "Subject" in report._report["expedientes"]["Epic"]
 
-
-class TestReportPrintMethods:
-    """Tests for the report print methods."""
-
-    def test_check_filename(self, report):
-        """Test that the filename is created when it doesn't exist.
-
-        Due to the dynamic nature of the file naming and useing the
-        local directory to store the files, it's hard to do a good test.
-        If this fails, just change the file version number."""
-        year = dt.date.today().year
-        month = str(dt.date.today().month).rjust(2, "0")
-        filename = "SIEEL_report_{}-{}_1.md".format(month, year)
-        assert report._check_filename() == filename
