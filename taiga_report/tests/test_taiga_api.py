@@ -31,7 +31,7 @@ def api():
             ]
         }
     }
-    
+
     return taiga_api.TaigaAPI("sieel", yaml_dict)
 
 
@@ -87,9 +87,6 @@ def test_api_download_user_stories(api):
     print("User stories: " + str(userstories))
     assert isinstance(userstories, list)
     assert len(userstories)
-
-def test_api_download_user_stories_empty_response_raises_exception(api):
-    pass
 
 
 def test_api_download_us_failure_raises_exception(api):

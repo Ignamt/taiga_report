@@ -1,4 +1,4 @@
-"""Contains classes for the different report printers"""
+"""Contains classes for the different report printers."""
 import datetime as dt
 from pathlib import Path
 from docx import Document

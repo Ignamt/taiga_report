@@ -1,4 +1,4 @@
-
+"""Contains tests for the printer classes."""
 import datetime as dt
 
 import pytest
@@ -62,7 +62,6 @@ class TestBasePrinterMethods:
         ext = ".md"
         filename = "SIEEL_report_{}-{}".format(month, year) + ext
         assert pc.MarkdownPrinter._check_filename(report.project) == filename
-
 
     def test_check_filename_docx(self, report):
         """Test that the filename is created when it doesn't exist.

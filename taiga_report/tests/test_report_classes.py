@@ -1,8 +1,5 @@
 """Tests for classes.py."""
-import datetime as dt
-
 import pytest
-import docx
 
 from taiga_report import report_classes as rc
 
@@ -101,4 +98,3 @@ class TestReportClass:
                                          "Epic": []}
         report.classify_user_story(us)
         assert "Subject" in report._report["expedientes"]["Epic"]
-

@@ -1,8 +1,6 @@
 """Handles all API requests and response processing."""
 import requests
 import json
-import os
-
 
 
 class TaigaAPI:
