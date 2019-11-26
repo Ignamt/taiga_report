@@ -6,7 +6,7 @@ with open("requirements.txt", "r") as req:
 setuptools.setup(
     name="taiga_report",
     version="0.0.1",
-    packages=["taiga_report"],
+    packages=["taiga_report.*"],
     classifiers=[
         "Programming Language :: Python :: 3",
     ],
