@@ -2,3 +2,7 @@
 _pycache_/*
 *SIEEL_report*.md
 *.code-workspace
+venv/
+*egg-info*
+.pytest_cache/
+.vscode/
