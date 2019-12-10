@@ -1,7 +1,7 @@
 """Tests for classes.py."""
 import pytest
 
-from taiga_report import report_classes as rc
+from taiga_report.classes import report_classes as rc
 
 
 @pytest.fixture

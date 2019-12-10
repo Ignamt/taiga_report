@@ -5,8 +5,8 @@ import pytest
 import docx
 from docx import Document
 
-from taiga_report import report_classes as rc
-from taiga_report import printer_classes as pc
+from taiga_report.classes import report_classes as rc
+from taiga_report.classes import printer_classes as pc
 
 
 @pytest.fixture

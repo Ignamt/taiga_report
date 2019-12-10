@@ -2,19 +2,13 @@
 import pytest
 import requests
 
-from taiga_report import taiga_api
+from taiga_report.api import taiga_api
 
 
 @pytest.fixture
 def api():
     """Return a new api object for each function as needed."""
     yaml_dict = {
-        'login_data': {
-            'type': 'normal',
-            'username': 'ignamt',
-            'password': 'tanoira1'
-        },
-        'host': 'https://taiga.leafnoise.io/api/v1/',
         'headers': {
             'content-type': 'application/json',
             'x-disable-pagination': 'True'
@@ -28,7 +22,13 @@ def api():
                 'expedientes',
                 'remitos',
                 'administracion'
-            ]
+            ],
+            'host': 'https://taiga.leafnoise.io/api/v1/',
+            'login_data': {
+                'type': 'normal',
+                'username': 'ignamt',
+                'password': 'tanoira1'
+            }
         }
     }
 
